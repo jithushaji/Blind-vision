@@ -3,7 +3,9 @@ import os
 import time
 import imutils
 import cv2
-import pandas as pd
+from gtts import gTTS
+from playsound import playsound
+import pyttsx3
 import sqlite3
 
 #-------------------------
@@ -14,12 +16,16 @@ def recognize_face():
     faceCascade = cv2.CascadeClassifier(harcascadePath)
     connection=sqlite3.connect("Database.db")
     font = cv2.FONT_HERSHEY_SIMPLEX
-    query="CREATE TABLE IF NOT EXISTS BlindDBRecognized (ID INTEGER PRIMARY KEY ,Time Text,Name TEXT NOT NULL);"
+    query="CREATE TABLE IF NOT EXISTS BlindDBRecognized (Time Text,ID INTEGER ,Name TEXT NOT NULL);"
     cursor=connection.cursor()
     cursor.execute(query)
     query2="SELECT * FROM Blindvision WHERE ID=?"
     query3="INSERT OR IGNORE INTO BlindDBRecognized (Time,ID,Name) VALUES (? ,? ,?)"
     query4="SELECT Name FROM BlindDBRecognized WHERE Time=?"
+    q="DROP TABLE IF EXISTS temp_table;"
+    cursor.execute(q)
+    connection.commit()
+    
 
     # Initialize and start realtime video capture
     cam = cv2.VideoCapture(0)
@@ -83,22 +89,38 @@ def recognize_face():
             else:
                 cv2.putText(im, str(confstr), (x + 5, y + h - 5), font, 1, (0, 0, 255), 1)
             
-            for x in result:
-                print(x)
+#             for x in result:
+#                 print(x)
 
 
         cv2.imshow('Recognizer', im)
         if (cv2.waitKey(1) == ord('q')):
             break
     
-#     val1=(timeStamp,)
-#     result = cursor.execute(query4,val1)
-#     for x in result:
-#         print(x)
-#         print("\n")
-    print("Success")
-    cam.release()
+    q1="CREATE TABLE temp_table as SELECT DISTINCT * FROM BlindDBRecognized;"
+    q2="DELETE FROM BlindDBRecognized;" 
+    q3="INSERT INTO BlindDBRecognized SELECT * FROM temp_table"
+    cursor.execute(q1)
+    cursor.execute(q2)
+    cursor.execute(q3)
+    cursor.execute(q)
+    connection.commit()
+    ts = time.time()
+    timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M')
+    val1=(timeStamp,)
+    result = cursor.execute(query4,val1)
+    f= open("result.txt","w+")
+    for x in result:
+        print(x[0])
+        f.write(x[0])
+        f.write("\n")
+    f.close()
+    f= open("result.txt", "r")
+    text = f.read()
+    f.close()
     cv2.destroyAllWindows()
-
-
+    tts = gTTS(text)
+    tts.save("result.mp3")
+    playsound("result.mp3")
+    
 recognize_face()
