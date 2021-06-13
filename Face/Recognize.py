@@ -5,8 +5,10 @@ import imutils
 import cv2
 from gtts import gTTS
 from playsound import playsound
-import pyttsx3
 import sqlite3
+
+# os.remove("result.mp3")
+# os.remove("result.txt") 
 
 #-------------------------
 def recognize_face():
@@ -124,3 +126,5 @@ def recognize_face():
     playsound("result.mp3")
     
 recognize_face()
+os.remove("result.mp3")
+os.remove("result.txt") 

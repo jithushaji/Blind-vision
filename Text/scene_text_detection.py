@@ -4,6 +4,10 @@ import numpy as np
 import pytesseract
 import argparse
 import cv2
+import os
+from gtts import gTTS
+from playsound import playsound
+
 
 def decode_predictions(scores, geometry):
     # grab the number of rows and columns from the scores volume, then
@@ -56,7 +60,7 @@ def decode_predictions(scores, geometry):
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", type=str,
+ap.add_argument("-i", "--image", type=str,default = "img.jpg",
     help="path to input image")
 ap.add_argument("-east", "--east", type=str, default = "frozen_east_text_detection.pb",
     help="path to input EAST text detector")
@@ -158,6 +162,14 @@ for ((startX, startY, endX, endY), text) in results:
     print (text,file=save)
     save.close()
     
+f= open("result.txt", "r")
+text = f.read()
+f.close()
+tts = gTTS(text)
+tts.save("result.mp3")
+playsound("result.mp3")
+os.remove("result.mp3")
+os.remove("result.txt")     
     
 # show the output image
 #cv2.imshow("Text Detection", output)

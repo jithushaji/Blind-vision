@@ -4,9 +4,13 @@ import pytesseract
 import argparse
 import cv2
 import os
+from gtts import gTTS
+from playsound import playsound 
+
+
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True,
+ap.add_argument("-i", "--image", default="img.jpg",
 	help="path to input image to be OCR'd")
 ap.add_argument("-p", "--preprocess", type=str, default="thresh",
 	help="type of preprocessing to be done")
@@ -30,11 +34,16 @@ cv2.imwrite(filename, gray)
 # load the image as a PIL/Pillow image, apply OCR, and then delete
 # the temporary file
 text = pytesseract.image_to_string(Image.open(filename))
+print(text)
+tts = gTTS(text)
+tts.save("result.mp3")
+playsound("result.mp3")
 
 os.remove(filename)
-print(text)
-# show the output images
-cv2.imshow("Image", image)
-cv2.imshow("Output", gray)
-cv2.waitKey(0)
 
+# show the output images
+#cv2.imshow("Image", image)
+#cv2.imshow("Output", gray)
+os.remove("result.mp3")
+
+cv2.waitKey(0)
