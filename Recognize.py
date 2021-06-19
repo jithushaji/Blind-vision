@@ -7,8 +7,12 @@ from gtts import gTTS
 from playsound import playsound
 import sqlite3
 
-# os.remove("result.mp3")
-# os.remove("result.txt") 
+file1="result.mp3"
+file2="result.txt"
+if os.path.exists(file1)==True:
+    os.remove(file1)
+if os.path.exists(file2)==True:
+    os.remove(file2)
 
 #-------------------------
 def recognize_face():

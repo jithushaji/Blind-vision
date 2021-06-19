@@ -3,7 +3,15 @@ import numpy as np
 import argparse
 import os
 import cv2
+from gtts import gTTS
+from playsound import playsound
 
+file1="result.mp3"
+file2="result.txt"
+if os.path.exists(file1)==True:
+    os.remove(file1)
+if os.path.exists(file2)==True:
+    os.remove(file2)
 
 def capture():
     cam = cv2.VideoCapture(0)
@@ -64,8 +72,13 @@ def object_det():
             (startX, startY, endX, endY) = box.astype('int')
 
             # display the prediction
-            label = '{}: {:.2f}%'.format(CLASSES[idx], confidence * 100)
-            print('{}'.format(label))
+            label = "{}".format(CLASSES[idx], confidence * 100)
+            print("{}\n".format(label))
+            text = "".join([c if ord(c) < 128 else "" for c in label]).strip()
+            save = open("result.txt", "a+")
+            print (text,file=save)
+            save.close()
+            
             cv2.rectangle(image, (startX, startY), (endX, endY), COLORS[idx], 2)
             y = startY - 15 if startY - 15 > 15 else startY + 15
             cv2.putText(image, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
@@ -77,4 +90,12 @@ def object_det():
 
 capture()
 object_det()
+f= open("result.txt", "r")
+text = f.read()
+f.close()
+tts = gTTS(text)
+tts.save("result.mp3")
+playsound("result.mp3")
+os.remove("result.mp3")
+os.remove("result.txt") 
 os.remove("img.jpg")
