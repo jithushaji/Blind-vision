@@ -111,7 +111,7 @@ def recognize_face():
     timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M')
     val1=(timeStamp,)
     result = cursor.execute(query4,val1)
-    f= open("result.txt","w+")
+    f= open("result.txt","a+")
     for x in result:
         print(x[0])
         f.write(x[0])

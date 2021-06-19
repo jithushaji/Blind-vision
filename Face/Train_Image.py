@@ -53,4 +53,4 @@ def counter_img(path):
         time.sleep(0.008)
         imgcounter += 1
 
-TrainImages()
+#TrainImages()

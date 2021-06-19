@@ -72,5 +72,5 @@ def takeImages():
     else:
         print("Check Entered Data")
 
-takeImages()
+#takeImages()
 
