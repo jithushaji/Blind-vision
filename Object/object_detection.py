@@ -1,6 +1,7 @@
 # import the necessary packages
 import numpy as np
 import argparse
+import os
 import cv2
 
 
@@ -16,7 +17,7 @@ def object_det():
     # ap.add_argument('-m', '--model', default='/Users/siddhantbansal/Desktop/Python/Personal_Projects/Object_Detection/MobileNetSSD_deploy.caffemodel', help='path to the Caffe pre-trained model')
     ap.add_argument('-p', '--prototxt', default="MobileNetSSD_deploy.prototxt.txt", help='path to Caffe deploy prototxt file')
     ap.add_argument('-m', '--model', default="MobileNetSSD_deploy.caffemodel", help='path to the Caffe pre-trained model')
-    ap.add_argument('-c', '--confidence', type=float, default=0.5, help='minimum probability to filter weak detections')
+    ap.add_argument('-c', '--confidence', type=float, default=0.7, help='minimum probability to filter weak detections')
     args = vars(ap.parse_args())
 
     # initialize the list of class labels MobileNet SSD was trained to
@@ -70,3 +71,4 @@ def object_det():
 
 
 object_det()
+os.remove("img.jpg")
