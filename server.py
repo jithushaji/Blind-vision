@@ -1,4 +1,4 @@
-
+import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 request = None
@@ -16,11 +16,20 @@ class RequestHandler_httpd(BaseHTTPRequestHandler):
     request = request[5 : int(len(request)-9)]
     #print(request)
     if request == 'face':
-      print('Running face recognition......')
+        print('Running face recognition......')
+        os.system('python3 Face/Recognize.py')
+    if request == 'add':
+        print('Adding face......')
+        os.system('python3 Face/add_data.py')
     if request == 'text':
-      print('Running text recognition......')
+        print('Running text recognition......')
+        os.system('python3 Text/Text.py')
+    if request == 'scene':
+        print('Running scene text recognition......')
+        os.system('python3 Text/scene_text_detection.py')
     if request == 'object':
-      print('Running object recognition.....')
+        print('Running object recognition.....')
+        
     return
 
 

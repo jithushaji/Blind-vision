@@ -5,6 +5,11 @@ import os
 import cv2
 
 
+def capture():
+    cam = cv2.VideoCapture(0)
+    ret,img=cam.read()
+    cv2.imwrite("img.jpg",img)
+
 def object_det():
     
     cam = cv2.VideoCapture(0)
@@ -70,5 +75,6 @@ def object_det():
     cv2.waitKey(0)
 
 
+capture()
 object_det()
 os.remove("img.jpg")

@@ -8,6 +8,10 @@ import os
 from gtts import gTTS
 from playsound import playsound
 
+def capture():
+    cam = cv2.VideoCapture(0)
+    ret,img=cam.read()
+    cv2.imwrite("img.jpg",img)
 
 def decode_predictions(scores, geometry):
     # grab the number of rows and columns from the scores volume, then
@@ -58,6 +62,7 @@ def decode_predictions(scores, geometry):
     # return a tuple of the bounding boxes and associated confidences
     return (rects, confidences)
 
+capture()
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", type=str,default = "img.jpg",
@@ -153,14 +158,15 @@ for ((startX, startY, endX, endY), text) in results:
     # using OpenCV, then draw the text and a bounding box surrounding
     # the text region of the input image
     text = "".join([c if ord(c) < 128 else "" for c in text]).strip()
+    save = open("result.txt", "a+")
+    print (text,file=save)
+    save.close()
     output = orig.copy()
     cv2.rectangle(output, (startX, startY), (endX, endY),
         (0, 0, 255), 2)
     cv2.putText(output, text, (startX, startY - 20),
         cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
-    save = open("result.txt", "w+")
-    print (text,file=save)
-    save.close()
+    
     
 f= open("result.txt", "r")
 text = f.read()
