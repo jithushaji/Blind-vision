@@ -17,18 +17,19 @@ class RequestHandler_httpd(BaseHTTPRequestHandler):
     #print(request)
     if request == 'face':
         print('Running face recognition......')
-        os.system('python3 Face/Recognize.py')
+        os.system('python3 Recognize.py')
     if request == 'add':
         print('Adding face......')
-        os.system('python3 Face/add_data.py')
+        os.system('python3 add_data.py')
     if request == 'text':
         print('Running text recognition......')
-        os.system('python3 Text/Text.py')
+        os.system('python3 Text.py')
     if request == 'scene':
         print('Running scene text recognition......')
-        os.system('python3 Text/scene_text_detection.py')
+        os.system('python3 scene_text_detection.py')
     if request == 'object':
         print('Running object recognition.....')
+        os.system('python3 object_detection.py')
         
     return
 
