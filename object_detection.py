@@ -1,10 +1,12 @@
 # import the necessary packages
 import numpy as np
 import argparse
+import time
 import os
 import cv2
 from gtts import gTTS
-from playsound import playsound
+import audioread
+import vlc
 
 file1="result.mp3"
 file2="result.txt"
@@ -19,7 +21,7 @@ def capture():
     cv2.imwrite("img.jpg",img)
 
 def object_det():
-    
+    say=gTTS("Recognising")
     cam = cv2.VideoCapture(0)
     ret,img=cam.read()
     cv2.imwrite("img.jpg",img)
@@ -90,12 +92,26 @@ def object_det():
 
 capture()
 object_det()
-f= open("result.txt", "r")
-text = f.read()
-f.close()
-tts = gTTS(text)
-tts.save("result.mp3")
-playsound("result.mp3")
-os.remove("result.mp3")
-os.remove("result.txt") 
-os.remove("img.jpg")
+if os.path.exists(file2)==True:
+    f= open("result.txt", "r")
+    text = f.read()
+    f.close()
+    tts = gTTS(text)
+    tts.save("result.mp3")
+
+    with audioread.audio_open('result.mp3') as f:
+        totalsec = f.duration
+        
+    p=vlc.MediaPlayer("result.mp3")
+    p.play()
+    time.sleep(totalsec)
+    
+else:
+    tts=gTTS("Recognision Failed Please Try Again")
+    tts.save("result.mp3")
+    with audioread.audio_open('result.mp3') as f:
+        totalsec = f.duration
+        
+    p=vlc.MediaPlayer("result.mp3")
+    p.play()
+    time.sleep(totalsec)

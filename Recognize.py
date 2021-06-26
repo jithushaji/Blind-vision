@@ -5,6 +5,7 @@ import imutils
 import cv2
 from gtts import gTTS
 from playsound import playsound
+from pygame import mixer
 import sqlite3
 
 file1="result.mp3"
@@ -121,13 +122,30 @@ def recognize_face():
         f.write(x[0])
         f.write("\n")
     f.close()
-    f= open("result.txt", "r")
-    text = f.read()
-    f.close()
-    cv2.destroyAllWindows()
-    tts = gTTS(text)
-    tts.save("result.mp3")
-    playsound("result.mp3")
+    if os.path.exists(file2)==True:
+        f= open("result.txt", "r")
+        text = f.read()
+        f.close()
+        tts = gTTS(text)
+        tts.save("result.mp3")
+
+        with audioread.audio_open('result.mp3') as f:
+            totalsec = f.duration
+        
+        p=vlc.MediaPlayer("result.mp3")
+        p.play()
+        time.sleep(totalsec)
+    
+    else:
+        tts=gTTS("Recognision Failed Please Try Again")
+        tts.save("result.mp3")
+        with audioread.audio_open('result.mp3') as f:
+            totalsec = f.duration
+        
+        p=vlc.MediaPlayer("result.mp3")
+        p.play()
+        time.sleep(totalsec)
+
     
 recognize_face()
 os.remove("result.mp3")
