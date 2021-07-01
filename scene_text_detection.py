@@ -7,6 +7,7 @@ import cv2
 import os
 from gtts import gTTS
 from playsound import playsound
+from pygame import mixer
 
 file1="result.mp3"
 file2="result.txt"
@@ -175,15 +176,15 @@ for ((startX, startY, endX, endY), text) in results:
     cv2.putText(output, text, (startX, startY - 20),
         cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 3)
     
-    
-f= open("result.txt", "r")
-text = f.read()
-f.close()
-tts = gTTS(text)
-tts.save("result.mp3")
-playsound("result.mp3")
-os.remove("result.mp3")
-os.remove("result.txt")     
+if os.path.exists(file2)==True:    
+    f= open("result.txt", "r")
+    text = f.read()
+    f.close()
+    tts = gTTS(text)
+    tts.save("result.mp3")
+    playsound("result.mp3")
+    os.remove("result.mp3")
+    os.remove("result.txt")     
     
 # show the output image
 #cv2.imshow("Text Detection", output)

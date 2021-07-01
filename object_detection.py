@@ -1,17 +1,23 @@
 # import the necessary packages
 import numpy as np
 import argparse
+import time
 import os
 import cv2
+from count import count
 from gtts import gTTS
-from playsound import playsound
+import audioread
+import vlc
 
 file1="result.mp3"
-file2="result.txt"
+file2="result1.txt"
+file3="result.txt"
 if os.path.exists(file1)==True:
     os.remove(file1)
 if os.path.exists(file2)==True:
     os.remove(file2)
+if os.path.exists(file3)==True:
+    os.remove(file3)
 
 def capture():
     cam = cv2.VideoCapture(0)
@@ -19,6 +25,14 @@ def capture():
     cv2.imwrite("img.jpg",img)
 
 def object_det():
+#     say=gTTS("Recognising....")
+#     say.save("play.mp3")
+#     with audioread.audio_open('play.mp3') as f:
+#         totalsec = f.duration
+#         
+#     p=vlc.MediaPlayer("play.mp3")
+#     p.play()
+#     time.sleep(totalsec)
     
     cam = cv2.VideoCapture(0)
     ret,img=cam.read()
@@ -73,9 +87,9 @@ def object_det():
 
             # display the prediction
             label = "{}".format(CLASSES[idx], confidence * 100)
-            print("{}\n".format(label))
+            #print("{}\n".format(label))
             text = "".join([c if ord(c) < 128 else "" for c in label]).strip()
-            save = open("result.txt", "a+")
+            save = open("result1.txt", "a+")
             print (text,file=save)
             save.close()
             
@@ -90,13 +104,28 @@ def object_det():
 
 capture()
 object_det()
-if os.path.exists(file2)==True:
-	f= open("result.txt", "r")
-	text = f.read()
-	f.close()
-	tts = gTTS(text)
-	tts.save("result.mp3")
-	playsound("result.mp3")
-	os.remove("result.mp3")
-	os.remove("result.txt") 
-	os.remove("img.jpg")
+count(file2)
+if os.path.exists(file3)==True:
+    f= open("result.txt", "r")
+    text = f.read()
+    f.close()
+    tts = gTTS(text)
+    tts.save("result.mp3")
+
+    with audioread.audio_open('result.mp3') as f:
+        totalsec = f.duration
+        
+    p=vlc.MediaPlayer("result.mp3")
+    p.play()
+    time.sleep(totalsec)
+    
+else:
+    tts=gTTS("Recognision Failed Please Try Again")
+    tts.save("result.mp3")
+    with audioread.audio_open('result.mp3') as f:
+        totalsec = f.duration
+        
+    p=vlc.MediaPlayer("result.mp3")
+    p.play()
+    time.sleep(totalsec)
+
